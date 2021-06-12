@@ -19,6 +19,7 @@ In order to assure integrity I have being using the following common method:
 
 This however does not always work. I noticed several times that multiple
 processes entered the then-fi block at the same time.
+That's why I wrote this little c-program, enjoy.
 
 Build
 =====
@@ -51,7 +52,6 @@ Usage
 	Note: Value to sem_open(2): "semaphore"
 	Note: Only PIDs >1 will be killed.
 	Note: Debug log at /var/logs/semaphore.log
-	homesrv:/home/fhz/bin # 
 
 Use Cases
 =========
@@ -59,9 +59,9 @@ Use Cases
 You may want to check out the `example.sh` bash script for a some example uses.
 
 In the simple examples below I use `$LOCK` for the name of the LOCK. 
-Meaning prior you need to have a `LOCK=somename` prior to get to that reference.
+You need to have a `LOCK=somename` prior to get to that reference.
 If you have multiple places where you use `semaphore` for a different purpose, make sure to
-use a different value for `$LOCK` for each prurpose.
+use a different value for `$LOCK` for each purpose.
 
 Here are some use cases:
 
@@ -83,13 +83,13 @@ Here are some use cases:
 # Important note:
 
 The `semaphore` program does NOT check if the user is permitted to perform the change in the lock or not.
-Just the access to the used lock file (see SEMPREFIX below) is needed.
+Just the access to the used lock file (see `SEMPREFIX` below) is needed.
 
 Environment
 ===========
 `DEBUGLEVEL` Can be used as an alternative to `-l n` (see usage).
 
-`DEBUG_FILE` File used for debug log information, if DEBUGLEVEL > 0.
+`DEBUG_FILE` File used for debug log information, if `DEBUGLEVEL` greater than 0.
 
 `SEMPREFIX` Prefix for the lock file. Defaults to `/dev/shm/semaphore.` which,
 together with the `name` of the lock (see usage) attached to the end it, will create a lock file for each `name`.
