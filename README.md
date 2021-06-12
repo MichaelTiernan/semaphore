@@ -11,10 +11,11 @@ that that section is executed only once even though multiple processes
 may be running in parallel executing the same script.
 
 In order to assure integrity I have being using the following common method:
- if mkdir /tmp/whatever; then
+
+	if mkdir /tmp/whatever; then
 		doStuff that must be run only once at a given time
 		rmdir /tmp/wahtever
- fi
+	fi
 
 This however does not always work. I noticed several times that multiple
 processes entered the then-fi block at the same time.
@@ -23,32 +24,34 @@ Build
 =====
 
 Just run
- make
+
+	make
+
 and it should compile it (provided gcc and install tool are present).
-Output looks like
-make
- gcc  -o semaphore -lpthread -lrt semaphore.c
- install -m 755 semaphore /usr/bin
+Output looks like:
+
+	gcc  -o semaphore -lpthread -lrt semaphore.c
+	install -m 755 semaphore /usr/bin
 
 Usage
 =====
 
- usage: semaphore -{s sec|c|h|r|t|T|p} [-k sig] name
-   -s sec  : Set and test semaphore whithout waiting for it. Return code = 0 means not used, you own the lock now. If lock is older than sec seconds we clear it.
-   -c      : Clear/release semaphore.
-   -r      : Read semaphore.
-   -k sig  : If sig >0: Kill parent of old lock holder if timed out. sig = signal (number) to use for kill(2). If sig = 0, no kill.
-   -t      : Show timer of semaphore. t=time, c=counter, p=PID, pp=parent PID
-   -T      : Show timer in seconds since epoch.
-   -l 0-9  : Set debuglevel.
-   -p      : Print parent pid (pp).
-   -h      : This short help.
- Source can be found at: https://github.com/StarPet/semaphore
- Note: Prefix used.........: "/dev/shm/semaphore."
- Note: Value to sem_open(2): "semaphore"
- Note: Only PIDs >1 will be killed.
- Note: Debug log at /var/logs/semaphore.log
- homesrv:/home/fhz/bin # 
+	usage: semaphore -{s sec|c|h|r|t|T|p} [-k sig] name
+	  -s sec  : Set and test semaphore whithout waiting for it. Return code = 0 means not used, you own the lock now. If lock is older than sec seconds we clear it.
+	  -c      : Clear/release semaphore.
+	  -r      : Read semaphore.
+	  -k sig  : If sig >0: Kill parent of old lock holder if timed out. sig = signal (number) to use for kill(2). If sig = 0, no kill.
+	  -t      : Show timer of semaphore. t=time, c=counter, p=PID, pp=parent PID
+	  -T      : Show timer in seconds since epoch.
+	  -l 0-9  : Set debuglevel.
+	  -p      : Print parent pid (pp).
+	  -h      : This short help.
+	Source can be found at: https://github.com/StarPet/semaphore
+	Note: Prefix used.........: "/dev/shm/semaphore."
+	Note: Value to sem_open(2): "semaphore"
+	Note: Only PIDs >1 will be killed.
+	Note: Debug log at /var/logs/semaphore.log
+	homesrv:/home/fhz/bin # 
 
 Use Cases
 =========
@@ -61,6 +64,7 @@ If you have multiple places where you use `semaphore` for a different purpose, m
 use a different value for `$LOCK` for each prurpose.
 
 Here are some use cases:
+
 	# Test and set: Here `-s 1` means a lock older than 1 sec is treated as free.
 	semaphore -s 1 $LOCK
 	rc=$?
@@ -83,12 +87,12 @@ Just the access to the used lock file (see SEMPREFIX below) is needed.
 
 Environment
 ===========
-DEBUGLEVEL Can be used as an alternative to `-l n` (see usage).
+`DEBUGLEVEL` Can be used as an alternative to `-l n` (see usage).
 
-DEBUG_FILE File used for debug log information, if DEBUGLEVEL > 0.
+`DEBUG_FILE` File used for debug log information, if DEBUGLEVEL > 0.
 
-SEMPREFIX Prefix for the lock file. Defaults to `/dev/shm/semaphore.` which,
+`SEMPREFIX` Prefix for the lock file. Defaults to `/dev/shm/semaphore.` which,
 together with the `name` of the lock (see usage) attached to the end it, will create a lock file for each `name`.
 
-LOCKNAME Global lock used for the sem_open (3) call
+`LOCKNAME` Global lock used for the sem_open (3) call
 
