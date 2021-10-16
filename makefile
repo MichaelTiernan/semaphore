@@ -14,5 +14,5 @@ else
 endif
 
 semaphore:	semaphore.c
-	$(CC) $(OPT) -o semaphore -lpthread -lrt semaphore.c
+	$(CC) $(OPT) -Wall -o semaphore -lpthread -lrt semaphore.c
 # End

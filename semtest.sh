@@ -5,6 +5,8 @@ SEMPRG="./semaphore -l 9"
 SEM=mysem
 tfile=/dev/shm/tfile.$$
 export PS4='+$(date +%Y.%m.%d-%H:%M:%S.%N):P$$:${FUNCNAME}:${LINENO}> '
+export DEBUG_FILE="semtest.log"
+rm -f semtest.log
 
 trap "rm -f $tfile" EXIT
 
@@ -52,5 +54,13 @@ sleep 3
 $SEMPRG -k 9 -s 2 $SEM  || echo "Error"
 $SEMPRG -c $SEM    || echo "Error"
 wait
+
+echo "Built-in wait test"
+$SEMPRG -s 5 $SEM || echo "Error" # Set the sem to make the -w later wait for its release
+{ sleep 2; $SEMPRG -c $SEM; } &    # Clear the sem in 2s so wait can get it
+echo "pre-wait (should take approx 2s) and have small 'user' and 'sys' times"
+time $SEMPRG -w 10 $SEM
+echo "post-wait"
+$SEMPRG -c $SEM
 
 # End
