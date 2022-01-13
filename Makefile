@@ -1,12 +1,7 @@
+
 CC=gcc
+
 ARCH := $(shell uname -m)
-
-install: semaphore
-	install -m 755 semaphore /usr/bin
-
-clean:
-	rm -f semaphore
-
 ifeq ($(ARCH),armv5tel)
 	OPT=-Dnosemopen
 else
@@ -15,4 +10,15 @@ endif
 
 semaphore:	semaphore.c
 	$(CC) $(OPT) -Wall -o semaphore -lpthread -lrt semaphore.c
+
+check:
+	@./semtest.sh
+
+test: check
+
+install: semaphore
+	install -m 755 semaphore /usr/bin
+
+clean:
+	rm -f semaphore
 # End
